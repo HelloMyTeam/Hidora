@@ -21,6 +21,7 @@ data class KeyboardMouseCallbacks(
     val onKeyStateChanged: (modifierBits: Int, pressedKeyCodes: Set<Int>) -> Unit,
     val onMouseMove: (dx: Int, dy: Int) -> Unit,
     val onMouseWheel: (delta: Int) -> Unit,
+    val onMousePan: (delta: Int) -> Unit,
     val onMouseButtonChange: (bit: Int, pressed: Boolean) -> Unit,
     val onSpeedCycle: () -> Unit,
     val onSwapHand: () -> Unit,
@@ -82,6 +83,8 @@ private fun MouseScreen(
                 onSpeedCycle = callbacks.onSpeedCycle,
                 onSwapHand = callbacks.onSwapHand,
                 onSwitchToKeyboard = onSwitchToKeyboard,
+                onScrollVertical = callbacks.onMouseWheel,
+                onScrollHorizontal = callbacks.onMousePan,
                 onLeftButtonChange = { pressed -> callbacks.onMouseButtonChange(MouseReporter.BUTTON_LEFT, pressed) },
                 onMiddleButtonChange = { pressed -> callbacks.onMouseButtonChange(MouseReporter.BUTTON_MIDDLE, pressed) },
                 onRightButtonChange = { pressed -> callbacks.onMouseButtonChange(MouseReporter.BUTTON_RIGHT, pressed) }

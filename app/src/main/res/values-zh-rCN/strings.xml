@@ -21,6 +21,10 @@
     <string name="mouse_button_right">右键</string>
     <string name="mouse_swap_hand">左右互换</string>
     <string name="mouse_switch_keyboard">键盘</string>
+    <string name="mouse_scroll_up">↑ 上</string>
+    <string name="mouse_scroll_down">↓ 下</string>
+    <string name="mouse_scroll_left">← 左</string>
+    <string name="mouse_scroll_right">→ 右</string>
     <string name="mouse_speed_low">速度：低</string>
     <string name="mouse_speed_mid">速度：中</string>
     <string name="mouse_speed_high">速度：高</string>
