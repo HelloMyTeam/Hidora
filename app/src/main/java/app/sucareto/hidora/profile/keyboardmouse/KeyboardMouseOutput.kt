@@ -32,6 +32,10 @@ class KeyboardMouseOutput(endpoints: HidEndpoints) {
         mouse.write(MouseReporter.buildReport(mouseButtonsBits, 0, 0, delta))
     }
 
+    fun panMouse(delta: Int): Result<Unit> = synchronized(lock) {
+        mouse.write(MouseReporter.buildReport(mouseButtonsBits, 0, 0, 0, delta))
+    }
+
     fun setMouseButton(bit: Int, pressed: Boolean): Result<Unit> = synchronized(lock) {
         mouseButtonsBits = if (pressed) mouseButtonsBits or bit else mouseButtonsBits and bit.inv()
         writeMouseButtons()

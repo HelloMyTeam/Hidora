@@ -47,6 +47,7 @@ class KeyboardMouseSession(
                 onKeyStateChanged = { modifierBits, keys -> write { writeKeyState(modifierBits, keys) } },
                 onMouseMove = { dx, dy -> write { moveMouse(dx, dy) } },
                 onMouseWheel = { delta -> write { scrollMouse(delta) } },
+                onMousePan = { delta -> write { panMouse(delta) } },
                 onMouseButtonChange = { bit, pressed -> write { setMouseButton(bit, pressed) } },
                 onSpeedCycle = { speed = speed.next() },
                 onSwapHand = { buttonsOnLeft = !buttonsOnLeft },

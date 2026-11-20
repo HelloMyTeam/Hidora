@@ -21,6 +21,10 @@
     <string name="mouse_button_right">Right</string>
     <string name="mouse_swap_hand">Swap sides</string>
     <string name="mouse_switch_keyboard">Keyboard</string>
+    <string name="mouse_scroll_up">↑ Up</string>
+    <string name="mouse_scroll_down">↓ Down</string>
+    <string name="mouse_scroll_left">← Left</string>
+    <string name="mouse_scroll_right">→ Right</string>
     <string name="mouse_speed_low">Speed: Low</string>
     <string name="mouse_speed_mid">Speed: Medium</string>
     <string name="mouse_speed_high">Speed: High</string>

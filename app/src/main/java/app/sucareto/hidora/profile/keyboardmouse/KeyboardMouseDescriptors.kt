@@ -26,8 +26,8 @@ object KeyboardMouseDescriptors {
         "05 01 09 02 a1 01 09 01 a1 00 05 09 19 01 29 05" +
             "15 00 25 01 95 05 75 01 81 02 95 01 75 03 81 01" +
             "05 01 09 30 09 31 09 38 15 81 25 7f 75 08 95 03" +
-            "81 06 c0 c0"
+            "81 06 05 0c 0a 38 02 95 01 81 06 c0 c0"
     )
 
-    const val MOUSE_REPORT_LENGTH = 4
+    const val MOUSE_REPORT_LENGTH = 5
 }
