@@ -8,6 +8,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import app.sucareto.hidora.core.hid.ResendLoop
 import app.sucareto.hidora.core.profile.ProfileSession
+import app.sucareto.hidora.profile.keyboardmouse.agent.AgentBridge
 import app.sucareto.hidora.profile.keyboardmouse.ui.KeyboardMouseCallbacks
 import app.sucareto.hidora.profile.keyboardmouse.ui.KeyboardMouseScreen
 import app.sucareto.hidora.profile.keyboardmouse.ui.KeyboardMouseUiState
@@ -20,8 +21,10 @@ import kotlinx.coroutines.launch
 
 class KeyboardMouseSession(
     private val output: KeyboardMouseOutput,
-    private val settings: KeyboardMouseSettings
+    private val settings: KeyboardMouseSettings,
+    preview: Boolean = false
 ) : ProfileSession {
+    private val agentBridge = AgentBridge(output, available = !preview)
     private val writeScope = CoroutineScope(SupervisorJob() + Dispatchers.IO.limitedParallelism(1))
     private val ledScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     private var leds by mutableIntStateOf(0)
@@ -36,6 +39,7 @@ class KeyboardMouseSession(
         var speed by remember { mutableStateOf(settings.mouseSpeed) }
         var buttonsOnLeft by remember { mutableStateOf(settings.buttonsOnLeft) }
         KeyboardMouseScreen(
+            agentBridge = agentBridge,
             state = KeyboardMouseUiState(
                 speed = speed,
                 buttonsOnLeft = buttonsOnLeft,
@@ -44,24 +48,36 @@ class KeyboardMouseSession(
                 capsLock = (leds and KeyboardReporter.LED_CAPS_LOCK) != 0
             ),
             callbacks = KeyboardMouseCallbacks(
-                onKeyStateChanged = { modifierBits, keys -> write { writeKeyState(modifierBits, keys) } },
-                onMouseMove = { dx, dy -> write { moveMouse(dx, dy) } },
-                onMouseWheel = { delta -> write { scrollMouse(delta) } },
-                onMousePan = { delta -> write { panMouse(delta) } },
-                onMouseButtonChange = { bit, pressed -> write { setMouseButton(bit, pressed) } },
+                onKeyStateChanged = { modifierBits, keys ->
+                    agentBridge.manualTakeover()
+                    write { writeKeyState(modifierBits, keys) }
+                },
+                onMouseMove = { dx, dy -> agentBridge.manualTakeover(); write { moveMouse(dx, dy) } },
+                onMouseWheel = { delta -> agentBridge.manualTakeover(); write { scrollMouse(delta) } },
+                onMousePan = { delta -> agentBridge.manualTakeover(); write { panMouse(delta) } },
+                onMouseButtonChange = { bit, pressed ->
+                    agentBridge.manualTakeover()
+                    write { setMouseButton(bit, pressed) }
+                },
                 onSpeedCycle = { speed = speed.next() },
                 onSwapHand = { buttonsOnLeft = !buttonsOnLeft },
-                onReleaseAll = { write { releaseAll() } },
+                onReleaseAll = { agentBridge.manualTakeover(); write { releaseAll() } },
                 onLeave = onLeave
             )
         )
     }
 
     override fun releaseInputs() {
+        agentBridge.setForeground(false)
         if (output.releaseAll().isFailure) resendLoop.request()
     }
 
+    override fun resumeInputs() {
+        agentBridge.setForeground(true)
+    }
+
     override fun close() {
+        agentBridge.close()
         ledScope.cancel()
         writeScope.cancel()
         output.releaseAll()

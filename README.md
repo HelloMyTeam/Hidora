@@ -85,3 +85,11 @@ Hidora 让已 root 的 Android 设备使用 Linux USB Gadget 功能，模拟成�
 - [Claude Code](https://claude.ai)：方案探索与代码编写
 - [ReoNa「Amore」](https://www.youtube.com/watch?v=6C3zYwUmMKE)：开发时听的音乐
 - [Ciqong](https://github.com/Ciqong)：提供了开发环境，协助测试，精神支持
+
+## Agent 通过 MCP 控制 USB 键鼠
+
+Hidora 现在提供可选的 MCP + Agent Skill。安卓屏幕显示一次性授权请求，由用户点击「允许 10 分钟」后，Agent 才能通过已配对的无线 ADB 发送键盘、鼠标和四向滚动操作，离开页面或切后台立即撤权。控制通道只监听安卓本机 127.0.0.1，不直接暴露到网络。
+
+安装和配置：[mcp/README.md](mcp/README.md) · Agent Skill：[skills/hidora-control/SKILL.md](skills/hidora-control/SKILL.md)。
+
+注意：USB HID 只能输入，**不能读取电脑屏幕**；需要额外摄像头/HDMI 采集或其他画面观察工具。MCP 回执仅证明 HID 写入，不证明电脑已完成对应操作。

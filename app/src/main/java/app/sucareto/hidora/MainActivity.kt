@@ -121,6 +121,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onResume() {
         super.onResume()
+        if (screen == Screen.Device) deviceViewModel.resumeInputs()
         showScreen(screen)
     }
 

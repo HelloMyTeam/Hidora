@@ -44,6 +44,8 @@ interface ProfileSession {
 
     fun releaseInputs() {}
 
+    fun resumeInputs() {}
+
     fun close() {}
 }
 

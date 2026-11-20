@@ -44,6 +44,17 @@ jobs:
             echo "::notice::Signing secrets not set, the APK is signed with a throwaway test key"
           fi
 
+      - name: MCP bridge unit tests
+        run: |
+          python3 -m compileall -q mcp
+          python3 -m unittest discover -s mcp/tests -v
+
+      - name: MCP SDK v2 import smoke
+        run: |
+          python3 -m venv /tmp/hidora-mcp-venv
+          /tmp/hidora-mcp-venv/bin/python -m pip install --disable-pip-version-check -r mcp/requirements.txt
+          /tmp/hidora-mcp-venv/bin/python -c "import sys; sys.path.insert(0, 'mcp'); from hidora_mcp import mcp; assert mcp is not None"
+
       - name: Build
         env:
           KEYSTORE_PASSWORD: ${{ secrets.SIGNING_KEYSTORE_PASSWORD }}
