@@ -111,6 +111,10 @@ class DeviceViewModel(application: Application) : AndroidViewModel(application) 
         activeDevice?.session?.releaseInputs()
     }
 
+    fun resumeInputs() {
+        activeDevice?.session?.resumeInputs()
+    }
+
     suspend fun checkEnvironment(): List<EnvCheck> {
         val app = getApplication<Application>()
         val device = EnvCheck(EnvChecks.DEVICE, CheckStatus.INFO,
@@ -341,7 +345,10 @@ class DeviceViewModel(application: Application) : AndroidViewModel(application) 
             refreshGlobalState()
             if (!started) return
         }
-        if (activeDevice?.profile == profile) onEntered()
+        if (activeDevice?.profile == profile) {
+            resumeInputs()
+            onEntered()
+        }
     }
 
     private fun onStop(profile: GadgetProfile) = runExclusive {

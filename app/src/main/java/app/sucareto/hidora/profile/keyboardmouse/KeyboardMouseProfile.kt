@@ -6,6 +6,7 @@ import androidx.compose.ui.platform.LocalContext
 import app.sucareto.hidora.R
 import app.sucareto.hidora.core.gadget.GadgetSpec
 import app.sucareto.hidora.core.gadget.HidFunctionSpec
+import app.sucareto.hidora.core.hid.HidEndpoints
 import app.sucareto.hidora.core.profile.DeviceIo
 import app.sucareto.hidora.core.profile.GadgetProfile
 import app.sucareto.hidora.core.profile.ProfileSession
@@ -42,6 +43,13 @@ object KeyboardMouseProfile : GadgetProfile {
 
     override fun createSession(context: Context, spec: GadgetSpec, io: DeviceIo): ProfileSession =
         KeyboardMouseSession(KeyboardMouseOutput(io.hid), KeyboardMouseSettings.get(context))
+
+    override fun createPreviewSession(context: Context): ProfileSession =
+        KeyboardMouseSession(
+            KeyboardMouseOutput(HidEndpoints.preview(spec(context).functions.map { it.name })),
+            KeyboardMouseSettings.get(context),
+            preview = true
+        )
 
     @Composable
     override fun Settings() = KeyboardMouseSettingsContent(KeyboardMouseSettings.get(LocalContext.current))

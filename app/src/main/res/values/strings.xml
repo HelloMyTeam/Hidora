@@ -29,6 +29,13 @@
     <string name="mouse_speed_mid">Speed: Medium</string>
     <string name="mouse_speed_high">Speed: High</string>
 
+    <string name="agent_control_idle">Agent: waiting for connection</string>
+    <string name="agent_control_request">Agent requests control of USB keyboard and mouse</string>
+    <string name="agent_control_granted">Agent authorized for up to 10 minutes</string>
+    <string name="agent_control_allow">Allow 10 min</string>
+    <string name="agent_control_deny">Deny</string>
+    <string name="agent_control_stop">Stop agent</string>
+    <string name="agent_control_error">Agent unavailable: %1$s</string>
     <string name="fn_label_mouse">Mouse</string>
     <string name="fn_label_ctrl_alt_del" translatable="false">C-A-Del</string>
 

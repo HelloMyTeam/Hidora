@@ -29,6 +29,13 @@
     <string name="mouse_speed_mid">速度：中</string>
     <string name="mouse_speed_high">速度：高</string>
 
+    <string name="agent_control_idle">Agent：等待连接</string>
+    <string name="agent_control_request">Agent 请求控制 USB 键鼠</string>
+    <string name="agent_control_granted">Agent 已授权（最多 10 分钟）</string>
+    <string name="agent_control_allow">允许 10 分钟</string>
+    <string name="agent_control_deny">拒绝</string>
+    <string name="agent_control_stop">停止 Agent</string>
+    <string name="agent_control_error">Agent 不可用：%1$s</string>
     <string name="fn_label_mouse">鼠标</string>
 
     <string name="action_stop">停用</string>

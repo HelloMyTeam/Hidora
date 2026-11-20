@@ -1,7 +1,10 @@
 package app.sucareto.hidora.profile.keyboardmouse.ui
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.displayCutoutPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
@@ -12,6 +15,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import app.sucareto.hidora.profile.keyboardmouse.MouseReporter
 import app.sucareto.hidora.profile.keyboardmouse.MouseSpeed
+import app.sucareto.hidora.profile.keyboardmouse.agent.AgentBridge
 
 private enum class SubView { KEYBOARD, MOUSE }
 
@@ -33,6 +37,7 @@ data class KeyboardMouseCallbacks(
 fun KeyboardMouseScreen(
     state: KeyboardMouseUiState,
     callbacks: KeyboardMouseCallbacks,
+    agentBridge: AgentBridge,
     modifier: Modifier = Modifier
 ) {
     var subView by rememberSaveable { mutableStateOf(if (state.startOnMouse) SubView.MOUSE else SubView.KEYBOARD) }
@@ -44,19 +49,24 @@ fun KeyboardMouseScreen(
         subView = next
     }
 
-    when (subView) {
-        SubView.KEYBOARD -> KeyboardScreen(
-            modifier = modifier.fillMaxSize(),
-            haptics = state.keyHaptics,
-            capsLock = state.capsLock,
-            onKeyStateChanged = callbacks.onKeyStateChanged,
-            onSwitchToMouse = { switchTo(SubView.MOUSE) }
-        )
-        SubView.MOUSE -> MouseScreen(
-            state = state,
-            callbacks = callbacks,
-            onSwitchToKeyboard = { switchTo(SubView.KEYBOARD) }
-        )
+    Column(modifier = modifier.fillMaxSize()) {
+        AgentControlBar(agentBridge)
+        Box(modifier = Modifier.weight(1f).fillMaxWidth()) {
+            when (subView) {
+                SubView.KEYBOARD -> KeyboardScreen(
+                    modifier = Modifier.fillMaxSize(),
+                    haptics = state.keyHaptics,
+                    capsLock = state.capsLock,
+                    onKeyStateChanged = callbacks.onKeyStateChanged,
+                    onSwitchToMouse = { switchTo(SubView.MOUSE) }
+                )
+                SubView.MOUSE -> MouseScreen(
+                    state = state,
+                    callbacks = callbacks,
+                    onSwitchToKeyboard = { switchTo(SubView.KEYBOARD) }
+                )
+            }
+        }
     }
 }
 
