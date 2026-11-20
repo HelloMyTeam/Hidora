@@ -101,7 +101,8 @@ class AgentBridge(private val output: KeyboardMouseOutput, private val available
             pending = null
             ui = AgentUiState()
         }
-        synchronized(ioLock) { output.releaseAll() }
+        val released = synchronized(ioLock) { output.releaseAll() }
+        if (released.isFailure) ui = AgentUiState(error = "USB release uncertain")
     }
 
     override fun close() {
@@ -201,7 +202,8 @@ class AgentBridge(private val output: KeyboardMouseOutput, private val available
 
         val outcome = try {
             perform(operation, request, token)
-            response(true, "usb_written", id).put("target_observed", false)
+            response(true, if (operation == "stop") "revoked" else "usb_written", id)
+                .put("target_observed", false)
         } catch (e: IllegalArgumentException) {
             response(false, "rejected", id, "invalid_arguments")
         } catch (e: org.json.JSONException) {
@@ -271,7 +273,7 @@ class AgentBridge(private val output: KeyboardMouseOutput, private val available
                         Thread.sleep(45)
                     } finally {
                         synchronized(ioLock) {
-                            if (isAuthorized(token)) output.setMouseButton(bit, false)
+                            if (isAuthorized(token)) output.setMouseButton(bit, false).getOrThrow()
                         }
                     }
                     if (it == 0 && count == 2) Thread.sleep(70)
@@ -294,7 +296,7 @@ class AgentBridge(private val output: KeyboardMouseOutput, private val available
                         Thread.sleep(25)
                     } finally {
                         synchronized(ioLock) {
-                            if (isAuthorized(token)) output.writeKeyState(0, emptySet())
+                            if (isAuthorized(token)) output.writeKeyState(0, emptySet()).getOrThrow()
                         }
                     }
                 }
