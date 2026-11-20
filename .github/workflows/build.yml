@@ -3,7 +3,9 @@ name: Build
 on:
   push:
     tags: ['v*']
-    branches: ['feat/tap-switch-keyboard-mouse-20261120']
+    branches:
+      - 'feat/tap-switch-keyboard-mouse-20261120'
+      - 'ci/build-hidora-apk-20261120'
   workflow_dispatch:
 
 permissions:
