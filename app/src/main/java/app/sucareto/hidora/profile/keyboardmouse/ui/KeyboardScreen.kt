@@ -1,6 +1,7 @@
 package app.sucareto.hidora.profile.keyboardmouse.ui
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.displayCutoutPadding
@@ -8,6 +9,8 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.FilledTonalButton
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.mutableIntStateOf
@@ -17,6 +20,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import app.sucareto.hidora.R
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
@@ -31,6 +35,7 @@ import app.sucareto.hidora.profile.keyboardmouse.model.KeyboardLayout
 import app.sucareto.hidora.profile.keyboardmouse.model.ModifierKey
 import app.sucareto.hidora.profile.keyboardmouse.model.NormalKey
 import app.sucareto.hidora.ui.components.PressHoldButton
+import app.sucareto.hidora.ui.components.hapticClick
 import app.sucareto.hidora.ui.components.StickyState
 import app.sucareto.hidora.ui.theme.Dimens
 import kotlinx.coroutines.delay
@@ -101,7 +106,7 @@ fun KeyboardScreen(
             KeyboardLayout.bottomLettersRow to 1f,
             KeyboardLayout.controlRow to 1f
         )
-        rows.forEach { (rowKeys, rowWeight) ->
+        rows.forEachIndexed { index, (rowKeys, rowWeight) ->
             Row(modifier = Modifier.weight(rowWeight).fillMaxWidth()) {
                 rowKeys.forEach { key ->
                     RenderKey(
@@ -115,6 +120,20 @@ fun KeyboardScreen(
                         onSwitchToMouse = onSwitchToMouse,
                         onCtrlAltDelPulse = ::pulseCtrlAltDel
                     )
+                }
+                // Always-visible, one-tap path to the mouse; Fn + Space still works.
+                if (index == 0) {
+                    FilledTonalButton(
+                        onClick = hapticClick(haptics, onSwitchToMouse),
+                        modifier = Modifier.weight(1.7f).fillMaxHeight().padding(Dimens.KeyGap),
+                        contentPadding = PaddingValues(horizontal = Dimens.KeyGap)
+                    ) {
+                        Text(
+                            text = stringResource(R.string.fn_label_mouse),
+                            fontSize = Dimens.KeyFontSize,
+                            maxLines = 1
+                        )
+                    }
                 }
             }
         }
